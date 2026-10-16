@@ -2,6 +2,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from scan_summary import build_summary
 
 
 def find_file(dir_path, name):
@@ -63,11 +64,8 @@ def generate_report(results_dir: str) -> str:
         vt_status = "✅"
         vt_detail = f"{vt_positives}/{vt_total} 引擎报毒"
 
-    virus_overall = "✅"
-    if clamav_status == "❌" or vt_status == "❌":
-        virus_overall = "❌"
-    elif yara_status == "⚠️" or vt_status == "⚠️":
-        virus_overall = "⚠️"
+    scan_summary = build_summary(results_dir)
+    virus_overall = {'pass': '✅', 'review': '⚠️', 'fail': '❌'}[scan_summary['overall']]
 
     all_pass = meta_status == "✅" and virus_overall == "✅" and usability_status == "✅"
 
@@ -80,7 +78,7 @@ def generate_report(results_dir: str) -> str:
         meta_detail = "; ".join(meta_result["errors"][:3])
     report += f"| 元数据校验 | {meta_status} | {meta_detail} |\n"
 
-    virus_detail = f"ClamAV: {clamav_infected} 个威胁 · VirusTotal: {vt_detail} · YARA: {yara_hits} 条匹配"
+    virus_detail = ' · '.join(f'{name}: {check["detail"]}' for name, check in scan_summary['checks'].items())
     report += f"| 病毒扫描 | {virus_overall} | {virus_detail} |\n"
 
     usability_detail = "结构完整，启动目标存在"

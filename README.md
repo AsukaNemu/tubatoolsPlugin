@@ -98,6 +98,17 @@ python3 scripts/validate-usability.py \
 
 两个脚本都会输出 JSON 结果。`status` 为 `pass` 表示未发现阻止提交的问题；`warnings` 仍建议在创建 Pull Request 前处理。
 
+审核脚本的离线回归检查：
+
+```bash
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
+```
+
+病毒审核会记录文件收集与各扫描器的退出状态。下载不完整、扫描器失败、零文件扫描、
+VirusTotal 查询失败或未收录的文件均不能获得 `verified`；未配置 VirusTotal 时会明确标为
+跳过。扫描只验证对应提交，PR 更新后需要重新扫描。脚本测试使用合成数据和模拟响应，
+不会执行插件或向 VirusTotal 上传文件。
+
 ## 提交性能报告
 
 性能报告请通过客户端中的图形化报告提交功能上传，不要手动修改 `reports/` 目录或操作 Git。报告应包含真实硬件和测试结果；请勿提交姓名、序列号、激活码、账号信息等隐私或敏感数据。报告合入后，维护者可以在 Actions 页面手动运行 **Update leaderboard & community index**，更新排行榜和工具索引。
