@@ -5,6 +5,7 @@ import sys
 import time
 import urllib.request
 import urllib.error
+import contextlib
 from pathlib import Path
 
 
@@ -57,6 +58,7 @@ def scan_directory(scan_dir: str) -> dict:
     total_positives = 0
     total_total = 0
     all_files = []
+    skipped_files = []
 
     for root, dirs, files in os.walk(scan_dir):
         for fname in files:
@@ -65,6 +67,7 @@ def scan_directory(scan_dir: str) -> dict:
                 continue
             if os.path.getsize(fpath) > 32 * 1024 * 1024:
                 print(f"  Skipping large file (>32MB): {fname}")
+                skipped_files.append(fname)
                 continue
             all_files.append(fpath)
 
@@ -110,19 +113,22 @@ def scan_directory(scan_dir: str) -> dict:
 
         time.sleep(15)
 
-    overall_status = "pass"
+    overall_status = "unknown" if skipped_files or not results else "pass"
     for r in results:
         if r["status"] == "fail":
             overall_status = "fail"
             break
         if r["status"] == "warn":
             overall_status = "warn"
+        elif r["status"] == "unknown" and overall_status == "pass":
+            overall_status = "unknown"
 
     return {
         "status": overall_status,
         "positives": total_positives,
         "total": total_total if total_total > 0 else 0,
         "files": results,
+        "skipped_files": skipped_files,
     }
 
 
@@ -131,9 +137,15 @@ def main():
         print("Usage: virustotal-check.py <scan_dir>", file=sys.stderr)
         sys.exit(1)
 
-    result = scan_directory(sys.argv[1])
+    try:
+        # stdout is the JSON artifact consumed by the workflow; logs belong on stderr.
+        with contextlib.redirect_stdout(sys.stderr):
+            result = scan_directory(sys.argv[1])
+    except Exception:
+        # Exception URLs can contain the API key. Do not serialize them into artifacts.
+        result = {"status": "error", "message": "VirusTotal query failed"}
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    sys.exit(0)
+    sys.exit(0 if result['status'] in ('pass', 'skip') else 1)
 
 
 if __name__ == "__main__":

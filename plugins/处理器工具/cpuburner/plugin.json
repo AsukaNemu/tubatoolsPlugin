@@ -1,0 +1,19 @@
+{
+  "id": "cpuburner",
+  "name": "cpuburner",
+  "version": "1.0",
+  "description": "\u4E00\u6B3ECPU\u6E29\u5EA6\u538B\u529B\u6D4B\u8BD5\u5DE5\u5177",
+  "category": "\u5904\u7406\u5668\u5DE5\u5177",
+  "publisher": "Patrickmn",
+  "tags": [
+    "CPU",
+    "\u70E4\u9E21",
+    "\u538B\u529B\u6D4B\u8BD5"
+  ],
+  "launchTarget": "cpuburner.exe",
+  "author": "anzheerdiya",
+  "submittedAt": "2026-09-21T13:54:20.7846842\u002B00:00",
+  "homepage": "https://patrickmn.com/projects/cpuburn/",
+  "file": "cpuburn-1.0.zip",
+  "icon": "cpuburner.ico"
+}

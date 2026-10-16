@@ -1,0 +1,15 @@
+{
+  "id": "touchpadshield-1-1-2-build0110-setup",
+  "name": "TouchpadShield-1.1.2-build0110-setup",
+  "version": "1.1.2",
+  "description": "Touchpad Shield \u662F\u4E00\u6B3E Windows \u684C\u9762\u5DE5\u5177\uFF0C\u7528\u4E8E\u5728\u6253\u5B57\u65F6\u51CF\u5C11\u624B\u638C\u3001\u624B\u8155\u8BEF\u89E6\u89E6\u63A7\u677F\u5BFC\u81F4\u7684\u5149\u6807\u6F02\u79FB\u4E0E\u8BEF\u70B9\u51FB\u3002\u5B83\u5C06 Microsoft Precision Touchpad (PTP) \u8C03\u4F18\u9009\u9879\u96C6\u4E2D\u5728\u4E00\u5904\uFF0C\u5E76\u9075\u5FAA Precision Touchpad tuning guidelines\uFF1B\u540C\u65F6\u53EF\u6839\u636E\u60A8\u76D1\u63A7\u7684\u5916\u63A5\u8F93\u5165\u8BBE\u5907\uFF08\u5982\u9F20\u6807\u3001\u952E\u76D8\u3001\u624B\u67C4\u7B49\uFF09\u8FDE\u63A5\u72B6\u6001\uFF0C\u81EA\u52A8\u5173\u95ED\u6216\u6062\u590D\u5185\u7F6E\u89E6\u63A7\u677F\uFF0C\u907F\u514D\u5916\u8BBE\u5728\u7EBF\u65F6\u8BEF\u89E6\u3002",
+  "category": "\u5916\u8BBE\u5DE5\u5177",
+  "publisher": "ZiMiaoWorkshop",
+  "tags": [],
+  "launchTarget": "TouchpadShield-1.1.2-build0110-setup.exe",
+  "author": "15120283854",
+  "submittedAt": "2026-09-15T16:45:47.9621033\u002B00:00",
+  "homepage": "https://github.com/ZiMiaoWorkshop/Touchpad-Shield",
+  "file": "TouchpadShield-1.1.2-build0110-setup.zip",
+  "icon": "TouchpadShieldLogo.png"
+}

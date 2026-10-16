@@ -1,0 +1,19 @@
+{
+  "id": "e9-92-9b-e6-9e-81-e5-b7-a5-e5-85-b7-e7-ae-b1-2-3-0",
+  "name": "钛极工具箱",
+  "version": "2.3.0",
+  "description": "\u4E13\u6CE8\u4E8E\u6781\u81F4\u786C\u6838\u7684\u7CFB\u7EDF\u5168\u80FD\u4F18\u5316\u5DE5\u5177,\u96C6\u6210\u7CFB\u7EDF\u6DF1\u5EA6\u8C03\u4F18\u3001\u6E38\u620F\u4F53\u9A8C\u589E\u5F3A\u3001\u786C\u4EF6\u4FE1\u606F\u68C0\u6D4B\u3001\u6E38\u620F\u76D1\u63A7\u7B49 35 \u4E2A\u529F\u80FD\u6A21\u5757\u3002",
+  "category": "\u6E38\u620F\u5DE5\u5177",
+  "publisher": "\u5C0F\u5FF5",
+  "tags": [
+    "\u7CFB\u7EDF\u4F18\u5316",
+    "\u6E38\u620F\u4F18\u5316",
+    "Windows\u4F18\u5316\u5DE5\u5177"
+  ],
+  "launchTarget": "%E9%92%9B%E6%9E%81%E5%B7%A5%E5%85%B7%E7%AE%B1_2.3.0_x64-setup.exe",
+  "author": "SaucePlum",
+  "submittedAt": "2026-09-20T07:54:49.8894119\u002B00:00",
+  "homepage": "https://timaxtools.cn/",
+  "downloadUrl": "https://timaxtools.cn/%E9%92%9B%E6%9E%81%E5%B7%A5%E5%85%B7%E7%AE%B1_2.3.0_x64-setup.exe",
+  "icon": "\u672A\u6807\u9898-1.jpg"
+}

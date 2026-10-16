@@ -4,6 +4,7 @@ import os
 import sys
 import urllib.request
 import urllib.error
+from pathlib import PurePosixPath
 
 
 def collect_pr_files(pr_number: str, output_dir: str):
@@ -28,8 +29,20 @@ def collect_pr_files(pr_number: str, output_dir: str):
 
     pr_data = api_get(f"{api_base}/pulls/{pr_number}")
     head_sha = pr_data["head"]["sha"]
+    if os.environ.get('EXPECTED_HEAD_SHA', head_sha) != head_sha:
+        raise RuntimeError('PR head changed before collection')
 
-    files = api_get(f"{api_base}/pulls/{pr_number}/files?per_page=100")
+    files = []
+    page = 1
+    while True:
+        batch = api_get(f"{api_base}/pulls/{pr_number}/files?per_page=100&page={page}")
+        files.extend(batch)
+        if len(batch) < 100:
+            break
+        page += 1
+
+    if len(files) < pr_data.get('changed_files', len(files)):
+        raise RuntimeError('GitHub returned an incomplete changed-file list')
 
     os.makedirs(output_dir, exist_ok=True)
     downloaded = []
@@ -43,27 +56,35 @@ def collect_pr_files(pr_number: str, output_dir: str):
         if ext not in (".zip", ".exe", ".bat", ".cmd", ".ps1", ".vbs", ".msi", ".7z", ".rar", ".dll", ".sys", ".msc", ".lnk", ".json"):
             continue
 
-        local_path = os.path.join(output_dir, os.path.basename(filepath))
+        parts = PurePosixPath(filepath)
+        if parts.is_absolute() or '..' in parts.parts or '\\' in filepath:
+            raise ValueError('Unsafe PR file path')
+        local_path = os.path.join(output_dir, *parts.parts)
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
         if f.get("raw_url"):
             try:
-                req = urllib.request.Request(f["raw_url"], headers=headers)
+                # GitHub returns a canonical raw URL; do not forward the API token
+                # through raw-content redirects. This public resource repository
+                # needs authentication for API calls only.
+                req = urllib.request.Request(f["raw_url"], headers={"User-Agent": "TubaBot"})
                 with urllib.request.urlopen(req, timeout=60) as resp:
                     data = resp.read()
                 with open(local_path, "wb") as out:
                     out.write(data)
-                downloaded.append(os.path.basename(filepath))
+                downloaded.append(filepath)
                 print(f"  Downloaded: {filepath}")
             except Exception as e:
-                print(f"  Failed to download {filepath}: {e}", file=sys.stderr)
-        elif f.get("patch") and ext == ".json":
-            with open(local_path, "w", encoding="utf-8") as out:
-                out.write(f["patch"])
-            downloaded.append(os.path.basename(filepath))
+                raise RuntimeError(f"Failed to download {filepath}") from e
+        else:
+            raise RuntimeError(f"No complete download available for {filepath}")
 
     print(f"Collected {len(downloaded)} files: {downloaded}")
     if not downloaded:
-        print("Warning: no scannable files found in PR", file=sys.stderr)
+        raise RuntimeError("No scannable files found in PR")
+    if api_get(f"{api_base}/pulls/{pr_number}")['head']['sha'] != head_sha:
+        raise RuntimeError('PR head changed during collection')
+    return downloaded
 
 
 def main():
